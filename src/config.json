@@ -1,0 +1,28 @@
+{
+    "backend_url": "http://localhost:3000/api/metrics",
+    "alert_url": "https://localhost:3000/api/alerts",
+    "sqlite_db": "",
+    "interval": 5,
+    "api_key": "",
+    "live_mode": {
+        "poll": false,
+        "alerts": false
+    },
+    "metrics": {
+        "cpu": true,
+        "memory": true,
+        "disk": true,
+        "gpu": true,
+        "network": true,
+        "battery": true
+    },
+    "thresholds": {
+        "cpu_percent": 85,
+        "cpu_temp": 90,
+        "memory_percent": 90,
+        "disk_percent": 95,
+        "gpu_load": 90,
+        "gpu_temp": 85,
+        "battery_percent_low": 15
+    }
+}
