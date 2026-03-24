@@ -1,0 +1,1 @@
+"""Percent, plugged in, and time remaining"""
