@@ -1,15 +1,23 @@
-"""Console + SQLite local file logging"""
+"""Database Logger."""
 
 import sqlite3
 import time
 import socket 
 
-class Logger:
+class DatabaseLogger:
+    """Database Logger."""
 
     def __init__(self, sqlitedb) -> None:
         self.sqlitedb = sqlitedb
 
     def log_payload(self, data) -> None:
+        """
+        Logs a snapshot of data to the SQLite Database.
+
+        Parameters:
+            data (dict): Payload data.
+        """
+
         conn = sqlite3.connect(self.sqlitedb)
         cursor = conn.cursor()
         snapshot_query = "INSERT INTO Snapshots (hostname, timestamp) VALUES (?, ?)"

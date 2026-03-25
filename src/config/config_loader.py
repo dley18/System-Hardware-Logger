@@ -1,26 +1,37 @@
-"""Config loader (CLI Arguments + YAML file)"""
+"""Config loader"""
 
 import argparse
 import json
 
 class ConfigLoader:
+    """Config Loader for config.json file"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._parser = argparse.ArgumentParser(prog="System Hardware Logger", description="TODO", epilog="TODO")
         self._arg_list = ["--config", "--url", "--alert-url", "--sqlite-db", "--interval", "--api-key"]
         self._add_args()
 
-    def _add_args(self):
+    def _add_args(self) -> None:
+        """Helper method to add CL args to Arg List."""
+
         for arg in self._arg_list:
             self._parser.add_argument(arg)
 
-    def parse_args(self):
+    def parse_args(self) -> None:
+        """Parses CL arguments."""
+
         self.args = self._parser.parse_args()
-        # print(self.args.config, self.args.url, self.args.alert_url)
 
     def get_config(self) -> dict:
+        """
+        Overrides default configuration file with CL arguments.
+
+        Returns:
+            dict: Dictionary containing app configuration.
+        """
+
         try:
-            with open("config.json", "r") as file:
+            with open("config/config.json", "r") as file:
                 self.config = json.load(file)
 
             if self.args.config:
@@ -46,5 +57,7 @@ class ConfigLoader:
         
         except FileNotFoundError:
             print("No default config file exists.")
+            return self.config
         except json.JSONDecodeError:
             print("Failed to decode JSON from default config file.")
+            return self.config

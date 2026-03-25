@@ -1,15 +1,24 @@
-"""Load, VRAM, temp"""
+"""GPU Metric Collector."""
 import pynvml
 from pynvml import nvmlInit, nvmlDeviceGetHandleByIndex, nvmlDeviceGetName, nvmlDeviceGetMemoryInfo, nvmlDeviceGetTemperatureV, nvmlDeviceGetPowerUsage
 
 from .base import BaseCollector
 
 class GPUCollector(BaseCollector):
+    """GPU Metric Collector."""
 
     def __init__(self) -> None:
         self.gpu_metrics = {}
 
     def collect(self) -> None:
+        """Collects the following metrics per NVIDIA GPU: 
+        GPU Temperature, GPU Utilization Percentage, 
+        GPU Memory Controller Utilization Percentage, 
+        Total VRAM in GB, 
+        Used VRAM in GB, 
+        Free VRAM in GB, 
+        and Power Usage.
+        """
         nvmlInit()
         
         try:
@@ -35,4 +44,8 @@ class GPUCollector(BaseCollector):
             nvmlShutdown()
 
     def get_gpu_metrics(self) -> dict:
+        """
+        Returns:
+            dict: Dictionary containing GPU Metrics.
+        """
         return self.gpu_metrics

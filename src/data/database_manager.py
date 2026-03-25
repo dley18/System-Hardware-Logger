@@ -1,16 +1,18 @@
-"""Create Database Table Schema"""
+"""Database Manager."""
 import sqlite3
 
-class DB:
+class DatabaseManager:
+    """Manages Database Operations."""
 
 
-
-    def __init__(self, sqlitedb="system-hardware-logger.db"):
+    def __init__(self, sqlitedb="system-hardware-logger.db") -> None:
         self.conn = sqlite3.connect(sqlitedb)
         self.conn.execute("PRAGMA foreign_keys = ON;")
         self.cursor = self.conn.cursor()
 
-    def create_table_schema(self):
+    def create_table_schema(self) -> None:
+        """Creates database table schema in an SQLite Database file."""
+
         SCHEMA = """
         CREATE TABLE IF NOT EXISTS Snapshots (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,5 +88,3 @@ class DB:
 
         self.cursor.executescript(SCHEMA)
         self.conn.close()
-
-        

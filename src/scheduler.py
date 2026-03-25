@@ -1,18 +1,19 @@
-"""Interval polling loop, live mode"""
+"""Metric Collection Scheduler"""
 
 import time
 
 
-from collector.cpu import CPUCollector
-from collector.memory import MemoryCollector
-from collector.disk import DiskCollector
-from collector.gpu import GPUCollector
-from collector.network import NetworkCollector
-from collector.battery import BatteryCollector
-from payload import PayloadBuilder
-from logger import Logger
+from metric_collector.cpu import CPUCollector
+from metric_collector.memory import MemoryCollector
+from metric_collector.disk import DiskCollector
+from metric_collector.gpu import GPUCollector
+from metric_collector.network import NetworkCollector
+from metric_collector.battery import BatteryCollector
+from data.payload import Payload
+from telemetry.database_logger import DatabaseLogger
 
 class Scheduler:
+    """Metric Collection Scheduler."""
 
     def __init__(self, sqlitedb) -> None:
         self.cpu_collector = CPUCollector()
@@ -21,11 +22,17 @@ class Scheduler:
         self.gpu_collector = GPUCollector()
         self.network_collector = NetworkCollector()
         self.battery_collector = BatteryCollector()
-        self.payload_builder = PayloadBuilder()
+        self.payload = Payload()
         self.sqlitedb = sqlitedb
-        self.logger = Logger(self.sqlitedb)
+        self.database_logger = DatabaseLogger(self.sqlitedb)
 
     def poll(self, interval) -> None:
+        """
+        Polling collection/logging loop that repeats at the given interval per second.
+
+        Parameters:
+            interval (int): Time between runs in seconds.
+        """
 
         next_run = time.perf_counter()
 
@@ -51,7 +58,7 @@ class Scheduler:
             self.battery_collector.collect_safe()
             battery = self.battery_collector.get_battery_metrics()
 
-            self.logger.log_payload(self.payload_builder.build_payload(cpu, memory, disk, gpu, network, battery))
+            self.database_logger.log_payload(self.payload.build_payload(cpu, memory, disk, gpu, network, battery))
 
             sleep_time = next_run - time.perf_counter()
             if sleep_time > 0:

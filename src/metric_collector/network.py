@@ -1,14 +1,25 @@
-"""Bytes, packets sent and recieved"""
+"""Network Metric Collector."""
 import psutil
 
 from .base import BaseCollector
 
 class NetworkCollector(BaseCollector):
+    """Network Metric Collector."""
 
     def __init__(self) -> None:
         self.network_metrics = {}
 
     def collect(self) -> None:
+        """Collects the following per network interface: 
+        Total GB sent, 
+        Total GB recieved, 
+        number of packets sent, 
+        number of incoming errors, 
+        number of outgoing errors, 
+        number of incoming drops, 
+        and the number of outgoing drops.
+        """
+
         nics = psutil.net_io_counters(pernic=True)
         for entry in nics.items():
             name, stats = entry
@@ -25,4 +36,8 @@ class NetworkCollector(BaseCollector):
             self.network_metrics[name] = data
 
     def get_network_metrics(self) -> dict:
+        """
+        Returns:
+            dict: Dictionary containing Network Metrics.
+        """
         return self.network_metrics

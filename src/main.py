@@ -1,18 +1,19 @@
-"""Main entry point, argument parsing"""
-from config_loader import ConfigLoader
+"""Main Application Entry Point."""
+from config.config_loader import ConfigLoader
 from scheduler import Scheduler
-from db import DB
+from data.database_manager import DatabaseManager
 
 
 def main():
+    """Main entry point for System Hardware Logger."""
     config_loader = ConfigLoader()
     config_loader.parse_args()
     config = config_loader.get_config()
 
-    db = DB()
+    db = DatabaseManager()
     db.create_table_schema()
 
-    scheduler = Scheduler("system-hardware-logger.db")
+    scheduler = Scheduler("../database/system-hardware-logger.db")
     scheduler.poll(1)
     
     
