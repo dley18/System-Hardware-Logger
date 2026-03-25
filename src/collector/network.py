@@ -14,8 +14,8 @@ class NetworkCollector(BaseCollector):
             name, stats = entry
             data = {}
 
-            data["bytes_sent"] = stats.bytes_sent
-            data["bytes_recv"] = stats.bytes_recv
+            data["GB_sent"] = round(int(stats.bytes_sent) / 10**9, 3)
+            data["GB_recv"] = round(int(stats.bytes_recv) / 10**9, 3)
             data["packets_sent"] = stats.packets_sent
             data["errors_in"] = stats.errin
             data["errors_out"] = stats.errout

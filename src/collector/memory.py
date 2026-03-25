@@ -9,9 +9,9 @@ class MemoryCollector(BaseCollector):
 
     def collect(self) -> None:
         memory = psutil.virtual_memory()
-        self.memory_metrics["total"] = memory.total
-        self.memory_metrics["available"] = memory.available
-        self.memory_metrics["used"] = memory.used
+        self.memory_metrics["total_GB"] = round(int(memory.total) / 10**9, 3)
+        self.memory_metrics["available_GB"] = round(int(memory.available) / 10**9, 3)
+        self.memory_metrics["used_GB"] = round(int(memory.used) / 10**9, 3)
         self.memory_metrics["percent"] = memory.percent
 
     def get_memory_metrics(self) -> dict:

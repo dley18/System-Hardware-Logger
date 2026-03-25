@@ -14,9 +14,9 @@ class DiskCollector(BaseCollector):
             disk = psutil.disk_usage(path)
 
             data = {}
-            data["total"] = disk.total
-            data["used"] = disk.used
-            data["free"] = disk.free
+            data["total_GB"] = round(int(disk.total) / 10**9, 3)
+            data["used_GB"] = round(int(disk.used) / 10**9, 3)
+            data["free_GB"] = round(int(disk.free) / 10**9, 3)
             data["percent"] = disk.percent
 
             self.disk_metrics[path] = data

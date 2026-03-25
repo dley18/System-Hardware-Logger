@@ -5,12 +5,12 @@ from abc import ABC, abstractmethod
 class BaseCollector(ABC):
 
     @abstractmethod
-    def collect(self) -> dict:
+    def collect(self) -> None:
         pass
 
-    def collect_safe(self) -> dict:
+    def collect_safe(self):
         try:
-            return self.collect()
+            self.collect()
         except Exception as e:
             return {
                 "error": str(e),

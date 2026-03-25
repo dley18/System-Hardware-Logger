@@ -10,10 +10,11 @@ from collector.gpu import GPUCollector
 from collector.network import NetworkCollector
 from collector.battery import BatteryCollector
 from payload import PayloadBuilder
+from logger import Logger
 
 class Scheduler:
 
-    def __init__(self) -> None:
+    def __init__(self, db) -> None:
         self.cpu_collector = CPUCollector()
         self.memory_collector = MemoryCollector()
         self.disk_collector = DiskCollector()
@@ -21,6 +22,8 @@ class Scheduler:
         self.network_collector = NetworkCollector()
         self.battery_collector = BatteryCollector()
         self.payload_builder = PayloadBuilder()
+        self.db = db
+        self.logger = Logger(self.db)
 
     def poll(self, interval) -> None:
         # while True:
@@ -42,5 +45,5 @@ class Scheduler:
         self.battery_collector.collect_safe()
         battery = self.battery_collector.get_battery_metrics()
 
-        print(self.payload_builder.build_payload(cpu, memory, disk, gpu, network, battery))
+        self.logger.log_payload(self.payload_builder.build_payload(cpu, memory, disk, gpu, network, battery))
     
