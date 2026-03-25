@@ -12,8 +12,8 @@ def main():
     db = DB()
     db.create_table_schema()
 
-    scheduler = Scheduler(db)
-    scheduler.poll(5)
+    scheduler = Scheduler("system-hardware-logger.db")
+    scheduler.poll(1)
     
     
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ class CPUCollector(BaseCollector):
     def collect(self) -> None:
         self.cpu_metrics["cpu_percent"] = psutil.cpu_percent()
         self.cpu_metrics["per_core_percent"] = psutil.cpu_percent(percpu=True)
-        self.cpu_metrics["cpu_freq"] = psutil.cpu_freq()
+        self.cpu_metrics["cpu_freq"] = psutil.cpu_freq().current
         self.cpu_metrics["cpu_count"] = psutil.cpu_count()
         self.cpu_metrics["logical_cpu_count"] = psutil.cpu_count(logical=True)
 
