@@ -1,10 +1,10 @@
-"""Config loader"""
+"""Config manager"""
 
 import argparse
 import json
 
-class ConfigLoader:
-    """Config Loader for config.json file"""
+class ConfigManager:
+    """Config manager for config.json file"""
 
     def __init__(self) -> None:
         self._parser = argparse.ArgumentParser(prog="System Hardware Logger", description="TODO", epilog="TODO")
@@ -31,33 +31,39 @@ class ConfigLoader:
         """
 
         try:
-            with open("config/config.json", "r") as file:
-                self.config = json.load(file)
+            config = None
+            with open("config.json", "r") as file:
+                config = json.load(file)
 
             if self.args.config:
-                self.config = json.load(self.args.config)
-                return self.config
+                print(f"- Config file set to {self.args.config}")
+                config = json.load(self.args.config)
+                return config
             
             if self.args.url:
-                self.config["backend_url"] = self.args.url
+                print(f"- Setting backend url as {self.args.url}")
+                config["backend_url"] = self.args.url
 
             if self.args.alert_url:
-                self.config["alert_url"] = self.args.alert_url
+                print(f"- Setting alert url as {self.args.alert_url}")
+                config["alert_url"] = self.args.alert_url
 
             if self.args.sqlite_db:
-                self.config["sqlite_db"] = self.args.sqlite_db
+                print(f"- Setting {self.args.sqlite_db} as database location")
+                config["sqlite_db"] = self.args.sqlite_db
 
             if self.args.interval:
-                self.config["interval"] = self.args.interval
+                print(f"- Setting polling interval to {self.args.interval}")
+                config["interval"] = self.args.interval
 
             if self.args.api_key:
-                self.config["api_key"] = self.args.api_key
+                config["api_key"] = self.args.api_key
 
-            return self.config
+            return config
         
         except FileNotFoundError:
             print("No default config file exists.")
-            return self.config
+            return config
         except json.JSONDecodeError:
             print("Failed to decode JSON from default config file.")
-            return self.config
+            return config

@@ -1,13 +1,9 @@
 {
     "backend_url": "http://localhost:3000/api/metrics",
     "alert_url": "https://localhost:3000/api/alerts",
-    "sqlite_db": "",
-    "interval": 5,
+    "sqlite_db": "../database/system-hardware-logger.db",
+    "interval": 1,
     "api_key": "",
-    "live_mode": {
-        "poll": false,
-        "alerts": false
-    },
     "metrics": {
         "cpu": true,
         "memory": true,
