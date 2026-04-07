@@ -1,5 +1,5 @@
 {
-    "backend_url": "http://localhost:3000/api/metrics",
+    "backend_url": "http://localhost:3000",
     "alert_url": "https://localhost:3000/api/alerts",
     "sqlite_db": "../database/system-hardware-logger.db",
     "interval": 1,

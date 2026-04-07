@@ -6,6 +6,7 @@ from collector import Collector
 from config_manager import ConfigManager
 from payload import Payload
 from database_manager import DatabaseManager
+from poster import Poster
 
 class Scheduler:
     """Metric Collection Scheduler."""
@@ -18,6 +19,7 @@ class Scheduler:
         self._polling_interval = None
         self._sqlitedb = None
         self._database_manager = None
+        self._poster = None
 
 
     def setup_application(self) -> None:
@@ -29,6 +31,7 @@ class Scheduler:
 
         self._sqlitedb = self._config["sqlite_db"]
         self._database_manager = DatabaseManager(self._sqlitedb)
+        self._poster = Poster(self._config["backend_url"])
         self._polling_interval = self._config["interval"]
 
         # Create database table schema
@@ -79,6 +82,7 @@ class Scheduler:
 
             payload = self._payload.build_payload(cpu, memory, disk, gpu, network, battery)
             self._database_manager.log_payload(payload)
+            self._poster.post_payload(payload)
 
             sleep_time = next_run - time.perf_counter()
             if sleep_time > 0:

@@ -81,7 +81,11 @@ class Collector:
                 data["vram_total_GB"] = round(int(mem.total) / 10**9, 3)
                 data["vram_used_GB"] = round(int(mem.used) / 10**9, 3)
                 data["vram_free_GB"] = round(int(mem.free) / 10**9, 3)
-                data["power_usage"] = round(nvmlDeviceGetPowerUsage(handle) / 1000, 3)
+                try:
+                    data["power_usage"] = round(nvmlDeviceGetPowerUsage(handle) / 1000, 3)
+                except NVMLError as e:
+                    print("DEBUG: Can't record GPU power usage.")
+                    data["power_usage"] = None
                 
                 self._gpu_metrics[name] = data
         finally:
