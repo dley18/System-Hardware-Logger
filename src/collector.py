@@ -10,13 +10,26 @@ class Collector:
         self._gpu_metrics = {}
         self._network_metrics = {}
         self._battery_metrics = {}
+        self._has_nvidia_gpu = self._check_nvidia()
+
+    def _check_nvidia(self) -> bool:
+        try:
+            nvmlInit()
+            return True
+        except Exception:
+            return False
 
     def collect_cpu_metrics(self) -> None:
         """Collects CPU Usage Percentage, per-core usage percentage, CPU Frequency, Number of Cores, and Number of Logical Cores."""
 
         self._cpu_metrics["cpu_percent"] = psutil.cpu_percent()
         self._cpu_metrics["per_core_percent"] = psutil.cpu_percent(percpu=True)
-        self._cpu_metrics["cpu_freq"] = psutil.cpu_freq().current
+        try:
+            freq = psutil.cpu_freq()
+            self._cpu_metrics["cpu_freq"] = freq.current if freq is not None else None
+        except (SystemError, RuntimeError):
+            self._cpu_metrics["cpu_freq"] = None
+        
         self._cpu_metrics["cpu_count"] = psutil.cpu_count()
         self._cpu_metrics["logical_cpu_count"] = psutil.cpu_count(logical=True)
 
@@ -63,6 +76,10 @@ class Collector:
         Free VRAM in GB, 
         and Power Usage.
         """
+        if self._has_nvidia_gpu is False:
+            self._gpu_metrics = None
+            return
+        
         nvmlInit()
         
         try:
